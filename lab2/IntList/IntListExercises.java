@@ -10,7 +10,8 @@ public class IntListExercises {
      */
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
-        while (head.rest != null) {
+        while (head != null) {
+            // 改进判断条件↑
             head.first += c;
             head = head.rest;
         }
@@ -51,10 +52,12 @@ public class IntListExercises {
      */
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
-        while (x > 10) {
+        while (x >= 10) {
+            // 修改判断条件↑
             x = x / 10;
         }
-        int firstDigit = x % 10;
+        // 不需要再mod10了↓
+        int firstDigit = x;
         return firstDigit == lastDigit;
     }
 
@@ -77,6 +80,7 @@ public class IntListExercises {
             lst.first *= lst.first;
         }
 
-        return currElemIsPrime || squarePrimes(lst.rest);
+        return squarePrimes(lst.rest) || currElemIsPrime;
+        // 颠倒上方判断的次序，因为如果判断式前半截评估为真，函数直接返回了
     }
 }
