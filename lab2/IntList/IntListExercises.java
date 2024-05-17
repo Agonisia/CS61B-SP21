@@ -11,7 +11,7 @@ public class IntListExercises {
     public static void addConstant(IntList lst, int c) {
         IntList head = lst;
         while (head != null) {
-            // Improve judgment condition¡ü
+            // Improve judgment condition
             head.first += c;
             head = head.rest;
         }
@@ -53,10 +53,10 @@ public class IntListExercises {
     public static boolean firstDigitEqualsLastDigit(int x) {
         int lastDigit = x % 10;
         while (x >= 10) {
-            // Modify judgment condition¡ü
+            // Modify judgment condition
             x = x / 10;
         }
-        // No need for mod 10¡ý
+        // No need for mod 10
         int firstDigit = x;
         return firstDigit == lastDigit;
     }
