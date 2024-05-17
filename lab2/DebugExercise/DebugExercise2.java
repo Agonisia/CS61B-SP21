@@ -48,7 +48,7 @@ public class DebugExercise2 {
         for (int i = 0; i < a.length; i += 1) {
             /*
             * int biggerValue = max(a[i], b[i]);
-            * 重写的max函数有问题
+            * Problems with the rewritten max function
             * */
             int biggerValue = (a[i] > b[i]) ? a[i]:b[i];
             returnArray[i] = biggerValue;
@@ -64,7 +64,7 @@ public class DebugExercise2 {
         while (i < x.length) {
             /*
             * sum = sum + add(sum, x[i]);
-            * 这里重复计算了sum
+            * Here the sum is recalculated
             */
             sum = add(sum, x[i]);
             i = i + 1;
