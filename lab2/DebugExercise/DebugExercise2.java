@@ -48,7 +48,7 @@ public class DebugExercise2 {
         for (int i = 0; i < a.length; i += 1) {
             /*
             * int biggerValue = max(a[i], b[i]);
-            * Problems with the rewritten max function
+            * Max is broken
             * */
             int biggerValue = (a[i] > b[i]) ? a[i]:b[i];
             returnArray[i] = biggerValue;
