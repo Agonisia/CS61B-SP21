@@ -7,7 +7,7 @@ package DebugExercise;
 public class DebugExercise1 {
     public static int divideThenRound(int top, int bottom) {
         float quotient = (float) top / bottom;
-        // Data type error
+        // data type error
         int result = Math.round(quotient);
         return result;
     }
