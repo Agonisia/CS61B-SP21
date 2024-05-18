@@ -34,17 +34,17 @@ class GUISource implements InputSource {
     /** Return and log which direction arrow was pressed. */
     public String getKey() {
         String command = _source.readKey();
-        switch (command) {
-            case "↑" :
-                command = "Up";
+        switch (command) {      // if you are using Win and IDEA in Chinese
+            case "W" :          // you could change case to 'xiang shang jian tou', or 'W'
+                command = "Up"; // so as case below
                 break;
-            case "→" :
+            case "D" :
                 command = "Right";
                 break;
-            case "↓" :
+            case "S" :
                 command = "Down";
                 break;
-            case "←" :
+            case "A" :
                 command = "Left";
                 break;
             default :
