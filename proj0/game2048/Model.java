@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Pez
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -114,12 +114,73 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
+        board.setViewingPerspective(side);
+        changed = change(changed);
+        board.setViewingPerspective(Side.NORTH);
+
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
+
+    private boolean change(boolean changed) {
+        // 1. Try to move
+        int size = board.size();
+        for (int col = 0; col < size; col++){
+            for (int row = size - 1; row >= 0; row--){
+                Tile t = board.tile(col, row);
+                int num_mov = 0; // or you can start with 3 and sub 1 while find a tile not null
+                if (t != null){
+                    for (int upper_row = row + 1; upper_row < size; upper_row++){
+                        if (tile(col, upper_row) == null){
+                            num_mov++;
+                        }
+                    }
+                    if (num_mov != 0){ // without this judge action bring no changes would return True
+                        board.move(col, row + num_mov, t);
+                        changed = true;
+                    }
+                }
+
+            }
+        }
+        // 2. Try to merge
+        for (int col = 0; col < size; col++){
+            for (int row = 3; row >= 0; row--){ // from up to down
+                int row_lower = row -1;
+                if (row_lower < 0){
+                    break;
+                }
+                Tile t_curr = board.tile(col, row);
+                Tile t_lower = board.tile(col, row_lower);
+                if (t_curr == null || t_lower == null){
+                    break;
+                }
+
+                if (t_curr.value() == t_lower.value()){
+                    board.move(col, row, t_lower);
+                    score += t_lower.value() * 2;
+                    // move trailing elements
+                    for (int row_rest = row_lower - 1; row_rest >= 0; row_rest --){
+                        Tile t_rest = board.tile(col, row_rest);
+                        if (t_rest == null){
+                            break;
+                        }
+                        if (row_rest < size){
+                            board.move(col, row_rest+1, t_rest);
+                        }
+                    }
+                    changed = true;
+                }
+            }
+        }
+
+        return changed;
+    }
+
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -138,6 +199,14 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int row = 0; row < b.size(); row ++){
+            for (int col =0; col < b.size(); col ++)
+            {
+                if (b.tile(col, row)== null){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -148,6 +217,18 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for (int row = 0; row < b.size(); row ++){
+            for (int col =0; col < b.size(); col ++)
+            {
+                if (b.tile(col, row)== null){
+                    continue;
+                }
+                if (b.tile(col, row).value() == MAX_PIECE)
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -159,6 +240,39 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        // for case 1:
+        if (emptySpaceExists(b)){
+            return true;
+        }
+        // for case 2:
+        // using drift matrix
+        int[][] directions = {
+                {-1, 0}, // UP
+                {0, -1}, // LEFT
+                {1, 0},  // DOWN
+                {0, 1},  // RIGHT
+        };
+        for (int row = 0; row < b.size(); row ++){
+            for (int col =0; col < b.size(); col ++)
+            {
+                int element_curr = b.tile(col, row).value();
+
+                for(int[] direction : directions){
+                    int adjacent_row = row + direction[0];
+                    int adjacent_col = col + direction[1];
+
+                    if(adjacent_col > 0 && adjacent_col < b.size()
+                        && adjacent_row > 0 && adjacent_row < b.size())
+                    {
+                        if (element_curr == b.tile(adjacent_col, adjacent_row).value())
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+            }
+        }
         return false;
     }
 
