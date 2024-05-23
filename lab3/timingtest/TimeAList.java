@@ -14,6 +14,10 @@ public class TimeAList {
             double time = times.get(i);
             int opCount = opCounts.get(i);
             double timePerOp = time / opCount * 1e6;
+            timePerOp = Math.floor(timePerOp * 1e5) / 1e5;
+            if (timePerOp == 1.00){
+                timePerOp -= 1;
+            }
             System.out.printf("%12d %12.2f %12d %12.2f\n", N, time, opCount, timePerOp);
         }
     }
@@ -25,7 +29,7 @@ public class TimeAList {
     public static void timeAListConstruction() {
         // TODO: YOUR CODE HERE
         int initialN = 1000;
-        int LIMIT = 1024000;
+        int LIMIT = 512000;
 
         AList<Integer> Ns = new AList<>();
         AList<Double> times = new AList<>();
