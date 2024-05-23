@@ -1,8 +1,7 @@
 package timingtest;
 
 import edu.princeton.cs.algs4.Stopwatch;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
 /**
  * Created by hug.
  */
@@ -15,11 +14,11 @@ public class TimeAList {
             double time = times.get(i);
             int opCount = opCounts.get(i);
             double timePerOp = time / opCount * 1e6;
-
-            BigDecimal bd = new BigDecimal(timePerOp);
-            bd = bd.setScale(2, RoundingMode.DOWN);
-
-            System.out.printf("%12d %12.2f %12d %12s\n", N, time, opCount, bd.toString());
+            timePerOp = Math.floor(timePerOp * 1e5) / 1e5;
+            if (timePerOp == 1.00){
+               timePerOp -= 1;
+            }
+            System.out.printf("%12d %12.2f %12d %12.2f\n", N, time, opCount, timePerOp);
         }
     }
 
@@ -30,47 +29,27 @@ public class TimeAList {
     public static void timeAListConstruction() {
         // TODO: YOUR CODE HERE
         int initialN = 1000;
-        int LIMIT = 1024000;
-        int runs = 5;
+        int LIMIT = 64000;
 
         AList<Integer> Ns = new AList<>();
         AList<Double> times = new AList<>();
         AList<Integer> opCounts = new AList<>();
 
         int N = initialN;
-        while (N <= LIMIT) {
-            double timeInSeconds = getTimeInSeconds(N, runs);
+        while (N <=  LIMIT){
+            AList<Integer> a = new AList<>();
+            Stopwatch sw = new Stopwatch();
+
+            for(int i = 0 ; i < N; i++){
+                a.addLast(i);
+            }
+            double timeInSeconds = sw.elapsedTime();
             Ns.addLast(N);
             opCounts.addLast(N);
             times.addLast(timeInSeconds);
-
             N *= 2;
         }
 
         printTimingTable(Ns, times, opCounts);
-    }
-
-    private static double getTimeInSeconds(int N, int runs) {
-        AList<Integer> a = new AList<>();
-
-        // preheat
-        for (int i = 0; i < N; i++) {
-            a.addLast(i);
-        }
-
-        // take average
-        double totalTime = 0.0;
-        for (int k = 0; k < runs; k++) {
-            a = new AList<>();
-            for (int i = 0; i < N; i++) {
-                a.addLast(i);
-            }
-            Stopwatch sw = new Stopwatch();
-            for (int i = 0; i < N; i++) {
-                a.addLast(i);
-            }
-            totalTime += sw.elapsedTime();
-        }
-        return totalTime / runs;
     }
 }
