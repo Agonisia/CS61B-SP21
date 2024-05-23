@@ -6,11 +6,11 @@ public class ArrayDeque<T> {
     private int front;
     private int rear;
 
-    private static final int initial_capability =8;
-    private static final double usage_factor = 0.25;
+    private static final int INITIAL_CAPABILITY = 8;
+    private static final double USAGE_FACTOR = 0.25;
 
     public ArrayDeque() {
-        items = (T[]) new Object[initial_capability];
+        items = (T[]) new Object[INITIAL_CAPABILITY];
         size = 0;
         front = 0;
         rear = 1;
@@ -64,7 +64,7 @@ public class ArrayDeque<T> {
         T item = items[front];
         items[front] = null;
         size--;
-        if (items.length >= 16 && size < items.length * usage_factor) {
+        if (items.length >= 16 && size < items.length * USAGE_FACTOR) {
             resize(items.length / 2);
         }
         return item;
@@ -78,7 +78,7 @@ public class ArrayDeque<T> {
         T item = items[rear];
         items[rear] = null;
         size--;
-        if (items.length >= 16 && size < items.length * usage_factor) {
+        if (items.length >= 16 && size < items.length * USAGE_FACTOR) {
             resize(items.length / 2);
         }
         return item;
