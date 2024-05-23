@@ -31,20 +31,15 @@ public class TimeAList {
         // TODO: YOUR CODE HERE
         int initialN = 1000;
         int LIMIT = 1024000;
+        int runs = 5;
 
         AList<Integer> Ns = new AList<>();
         AList<Double> times = new AList<>();
         AList<Integer> opCounts = new AList<>();
 
         int N = initialN;
-        while (N <=  LIMIT){
-            AList<Integer> a = new AList<>();
-            Stopwatch sw = new Stopwatch();
-
-            for(int i = 0 ; i < N; i++){
-                a.addLast(i);
-            }
-            double timeInSeconds = sw.elapsedTime();
+        while (N <= LIMIT) {
+            double timeInSeconds = getTimeInSeconds(N, runs);
             Ns.addLast(N);
             opCounts.addLast(N);
             times.addLast(timeInSeconds);
@@ -53,5 +48,29 @@ public class TimeAList {
         }
 
         printTimingTable(Ns, times, opCounts);
+    }
+
+    private static double getTimeInSeconds(int N, int runs) {
+        AList<Integer> a = new AList<>();
+
+        // preheat
+        for (int i = 0; i < N; i++) {
+            a.addLast(i);
+        }
+
+        // take average
+        double totalTime = 0.0;
+        for (int k = 0; k < runs; k++) {
+            a = new AList<>();
+            for (int i = 0; i < N; i++) {
+                a.addLast(i);
+            }
+            Stopwatch sw = new Stopwatch();
+            for (int i = 0; i < N; i++) {
+                a.addLast(i);
+            }
+            totalTime += sw.elapsedTime();
+        }
+        return totalTime / runs;
     }
 }
