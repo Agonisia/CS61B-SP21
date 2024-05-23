@@ -24,7 +24,7 @@ public class TimeSLList {
     public static void timeGetLast() {
         // TODO: YOUR CODE HERE
         int initialN = 1000;
-        int LIMIT = 1024000;
+        int LIMIT = 64000;
         int ops = 10000;
 
         AList<Integer> Ns = new AList<>();
