@@ -1,7 +1,8 @@
 package timingtest;
 
 import edu.princeton.cs.algs4.Stopwatch;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 /**
  * Created by hug.
  */
@@ -14,7 +15,11 @@ public class TimeAList {
             double time = times.get(i);
             int opCount = opCounts.get(i);
             double timePerOp = time / opCount * 1e6;
-            System.out.printf("%12d %12.2f %12d %12.2f\n", N, time, opCount, timePerOp);
+
+            BigDecimal bd = new BigDecimal(timePerOp);
+            bd = bd.setScale(2, RoundingMode.DOWN);
+
+            System.out.printf("%12d %12.2f %12d %12s\n", N, time, opCount, bd.toString());
         }
     }
 
@@ -43,6 +48,7 @@ public class TimeAList {
             Ns.addLast(N);
             opCounts.addLast(N);
             times.addLast(timeInSeconds);
+
             N *= 2;
         }
 
