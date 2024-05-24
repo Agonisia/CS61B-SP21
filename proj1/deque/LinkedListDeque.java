@@ -81,7 +81,7 @@ public class LinkedListDeque<T> implements Iterable<T> {
         return size;
     }
 
-    public Boolean isEmpty() {
+    public boolean isEmpty() {
         return size == 0;
     }
 

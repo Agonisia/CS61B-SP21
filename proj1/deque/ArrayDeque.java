@@ -1,6 +1,10 @@
 package deque;
 
-public class ArrayDeque<T> {
+import org.apache.commons.collections.iterators.ArrayIterator;
+
+import java.util.Iterator;
+
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private T[] items;
     private int size;
     private int front;
@@ -28,12 +32,12 @@ public class ArrayDeque<T> {
         T[] newItems = (T[]) new Object[capacity];
         int currentIndex = plusOne(front);
         for (int i = 0; i < size; i++) {
-            newItems[i] = items[currentIndex];
+            newItems[capacity / 4 + i] = items[currentIndex];
             currentIndex = plusOne(currentIndex);
         }
         items = newItems;
-        front = capacity - 1;
-        rear = size;
+        front = capacity / 4 - 1;
+        rear = front + size + 1;
     }
 
     //1. add
@@ -126,6 +130,29 @@ public class ArrayDeque<T> {
         }
 
         return true;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        private int currentIndex = plusOne(front);
+        private int count =0;
+
+        @Override
+        public boolean hasNext() {
+            return count < size;
+        }
+
+        @Override
+        public T next() {
+            T item = items[currentIndex];
+            currentIndex = plusOne(currentIndex);
+            count++;
+            return item;
+        }
     }
 
 }
