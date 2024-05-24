@@ -141,6 +141,10 @@ public class ArrayDequeTest {
         for (int i = 0; i < 1000; i++) {
             assertEquals("Should be equal", ad1.removeFirst(), lld1.removeFirst());
         }
+
+        for (int i = 0; i < 1000; i++) {
+            assertEquals("Should be equal", ad1.equals(lld1), lld1.equals(ad1));
+        }
     }
 
 }
