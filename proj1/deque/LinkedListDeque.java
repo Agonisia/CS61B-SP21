@@ -1,6 +1,6 @@
 package deque;
 
-public class LinkedListDeque<T> implements Iterable<T> {
+public class LinkedListDeque<T> implements Deque<T>,Iterable<T> {
     private class Node {
         T item;
         Node prev;
