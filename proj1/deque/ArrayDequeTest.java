@@ -127,4 +127,20 @@ public class ArrayDequeTest {
         }
 
     }
+
+    @Test
+    public void equalDequeTest() {
+        ArrayDeque<Integer> ad1 = new ArrayDeque<>();
+        LinkedListDeque<Integer> lld1 = new LinkedListDeque<Integer>();
+
+        for (int i = 0; i < 1000; i++) {
+            ad1.addLast(i);
+            lld1.addLast(i);
+        }
+
+        for (int i = 0; i < 1000; i++) {
+            assertEquals("Should be equal", ad1.removeFirst(), lld1.removeFirst());
+        }
+    }
+
 }
