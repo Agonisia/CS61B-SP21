@@ -32,7 +32,22 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        return get(key) != null;
+        return containsKey(root, key);
+    }
+
+    private boolean containsKey(Node node, K key) {
+        if (node == null) {
+            return false;
+        }
+
+        int cmp = key.compareTo(node.key);
+        if (cmp < 0) {
+            return containsKey(node.left, key);
+        } else if (cmp > 0) {
+            return containsKey(node.right, key);
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -101,39 +116,23 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public V remove(K key) {
         // throw new UnsupportedOperationException("remove not supported");
-        Node nodeToRemove = getNode(root, key);
-        if (nodeToRemove == null) {
-            return null;
+        V value = get(key);
+        if (value != null) {
+            root = remove(root, key);
+            size--;
         }
-        V value = nodeToRemove.value;
-        root = remove(root, key);
         return value;
     }
 
     @Override
     public V remove(K key, V value) {
         // throw new UnsupportedOperationException("remove not supported");
-        Node nodeToRemove = getNode(root, key);
-        if (nodeToRemove == null || !nodeToRemove.value.equals(value)) {
-            return null;
+        if (containsKey(key) && get(key).equals(value)) {
+            root = remove(root, key);
+            size--;
+            return value;
         }
-        root = remove(root, key);
-        return value;
-    }
-
-    private Node getNode(Node node, K key) {
-        if (node == null) {
-            return null;
-        }
-
-        int cmp = key.compareTo(node.key);
-        if (cmp < 0) {
-            return getNode(node.left, key);
-        } else if (cmp > 0) {
-            return getNode(node.right, key);
-        } else {
-            return node;
-        }
+        return null;
     }
 
     private Node remove(Node node, K key) {
@@ -226,6 +225,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         printInOrder(node.right);
     }
 
+    /*
     public static void main(String[] args) {
         BSTMap<Integer, String> bst = new BSTMap<>();
         bst.put(3, "Three");
@@ -245,6 +245,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         System.out.println("Removing key 4 with value 'Five' (should not remove)");
         bst.remove(4, "Five");
         bst.printInOrder();
-    }
+    }*/
 
 }
