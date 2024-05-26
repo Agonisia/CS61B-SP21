@@ -20,10 +20,8 @@ public class CapersRepository {
     static final File CWD = new File(System.getProperty("user.dir"));
 
     /** Main metadata folder. */
-    static final File CAPERS_FOLDER = Utils.join(CWD, "capers"); // Hint: look at the `join`
+    static final File CAPERS_FOLDER = join(CWD, ".capers"); // Hint: look at the `join`
                                                                         // function in Utils
-    /** Story folder. */
-    static final File STORY = Utils.join(CAPERS_FOLDER, "story.txt");
 
     /**
      * Does required filesystem operations to allow for persistence.
@@ -34,10 +32,9 @@ public class CapersRepository {
      *    - dogs/ -- folder containing all of the persistent data for dogs
      *    - story -- file containing the current story
      */
-    public static void setupPersistence() throws IOException {
+    public static void setupPersistence() {
         CAPERS_FOLDER.mkdir();
         Dog.DOG_FOLDER.mkdir();
-        STORY.createNewFile();
     }
 
     /**
@@ -46,8 +43,16 @@ public class CapersRepository {
      * @param text String of the text to be appended to the story
      */
     public static void writeStory(String text) {
-        Utils.writeContents(STORY, Utils.readContentsAsString(STORY), text, "\n");
-        System.out.println(readContentsAsString(STORY));
+        File story = join(CAPERS_FOLDER, "story");
+        String newStoryContent;
+        if(!story.exists()){
+            newStoryContent = text;
+        } else {
+            newStoryContent = readContentsAsString(story) + "\n" +text;
+        }
+
+        writeContents(story, newStoryContent);
+        System.out.println(newStoryContent);
     }
 
     /**
@@ -58,7 +63,7 @@ public class CapersRepository {
     public static void makeDog(String name, String breed, int age) {
         Dog dog = new Dog(name, breed, age);
         dog.saveDog();
-        System.out.println(dog.toString());
+        System.out.println(dog);
     }
 
     /**
@@ -69,7 +74,9 @@ public class CapersRepository {
      */
     public static void celebrateBirthday(String name) {
         Dog dog = Dog.fromFile(name);
-        dog.haveBirthday();
-        dog.saveDog();
+        if(dog != null){
+            dog.haveBirthday();
+            dog.saveDog();
+        }
     }
 }
