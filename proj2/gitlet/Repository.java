@@ -1,9 +1,6 @@
 package gitlet;
 
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 import static gitlet.Utils.*;
@@ -48,7 +45,8 @@ public class Repository {
     /* fill in the rest of this class. */
     public static void init() {
         if (GITLET_DIR.exists()) {
-            System.out.println("A Gitlet version-control system already exists in the current directory.");
+            System.out.println(
+                    "A Gitlet version-control system already exists in the current directory.");
             System.exit(0);
         } else {
             GITLET_DIR.mkdir();
@@ -119,14 +117,6 @@ public class Repository {
     }
 
     public static void checkoutBranch(String branchName) {
-        /*
-        * Takes all files in the commit at the head of the given branch
-        *  puts them in the working directory
-        *  overwriting the versions of the files that are already there if they exist.
-        * Also, at the end of this command, the given branch will now be considered the current branch (HEAD).
-        * Any files that are tracked in the current branch but are not present in the checked-out branch are deleted.
-        * The staging area is cleared, unless the checked-out branch is the current branch (see Failure cases below).
-        * */
         // case1
         String currentBranchName = Head.getBranchName();
         if (currentBranchName.equals(branchName)) {
@@ -192,9 +182,9 @@ public class Repository {
     }
 
     public static void logGlobal() {
-        List<String> commitID = Utils.plainFilenamesIn(Repository.COMMIT_DIR);
-        for (String ID : commitID) {
-            Commit commit = Commit.getCommitFromID(ID);
+        List<String> allCommitID = Utils.plainFilenamesIn(Repository.COMMIT_DIR);
+        for (String commitID : allCommitID) {
+            Commit commit = Commit.getCommitFromID(commitID);
             commit.display();
         }
     }
@@ -223,7 +213,7 @@ public class Repository {
         if (allHead != null) {
             for (String head : allHead) {
                 if (head.equals(currentHead)) {
-                    System.out.println("*");
+                    System.out.print("*");
                 }
                 System.out.println(head);
             }
@@ -453,19 +443,22 @@ public class Repository {
             otherBlobContent = Blob.getBlob(otherBlobSHA1).getContent();
         }
 
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            outputStream.write(conflictStart);
-            outputStream.write(masterBlobContent);
-            outputStream.write(conflictSeparator);
-            outputStream.write(otherBlobContent);
-            outputStream.write(conflictEnd);
+        byte[] resultContent = new byte[conflictStart.length
+                + masterBlobContent.length + conflictSeparator.length
+                + otherBlobContent.length + conflictEnd.length];
+        int len = 0;
+        System.arraycopy(conflictStart, 0, resultContent, 0, conflictStart.length);
+        len += conflictStart.length;
+        System.arraycopy(masterBlobContent, 0, resultContent, len, masterBlobContent.length);
+        len += masterBlobContent.length;
+        System.arraycopy(conflictSeparator, 0, resultContent, len, conflictSeparator.length);
+        len += conflictSeparator.length;
+        System.arraycopy(otherBlobContent, 0, resultContent, len, otherBlobContent.length);
+        len += otherBlobContent.length;
+        System.arraycopy(conflictEnd, 0, resultContent, len, conflictEnd.length);
 
-            System.out.println("Encountered a merge conflict.");
-            return new Blob(outputStream.toByteArray(), filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+        System.out.println("Encountered a merge conflict.");
+        return new Blob(resultContent, filename);
     }
 
     private static List<String> getUntrackedFile() {

@@ -34,11 +34,14 @@ public class Main {
             case "commit":
                 if (!validatedInitialized() || !validateNumArgs(args, 2)) {
                     System.exit(0);
+                } else if (args[1].isEmpty()) {
+                    System.out.println("Please enter a commit message.");
+                    System.exit(0);
                 }
                 Repository.commit(args[1]);
                 break;
             case "log":
-                if (!validateNumArgs(args, 1)) {
+                if (!validatedInitialized() || !validateNumArgs(args, 1)) {
                     System.exit(0);
                 }
                 Repository.log();
@@ -70,7 +73,7 @@ public class Main {
                 Repository.remove(args[1]);
                 break;
             case "global-log":
-                if (!validateNumArgs(args, 1)) {
+                if (!validatedInitialized() || !validateNumArgs(args, 1)) {
                     System.exit(0);
                 }
                 Repository.logGlobal();
@@ -82,7 +85,7 @@ public class Main {
                 Repository.find(args[1]);
                 break;
             case "status":
-                if (!validateNumArgs(args, 1)) {
+                if (!validatedInitialized() || !validateNumArgs(args, 1)) {
                     System.exit(0);
                 }
                 Repository.status();

@@ -82,21 +82,18 @@ public class Commit implements Serializable {
         return Utils.readObject(Utils.join(Repository.COMMIT_DIR, filename), Commit.class);
     }
 
-    @Override
-    public String toString() {
-        if (parent.size() == 2) {
-            return String.format("===\n"
-                            + "commit %s\nMerge: %.7s %.7s\nDate: %s\n%s\n\n",
-                    commitID, parent.get(0), parent.get(1), dateFormat.format(date), message);
-        } else {
-            return String.format("===\n"
-                            + "commit %s\nDate: %s\n%s\n\n",
-                    commitID, dateFormat.format(date), message);
-        }
-    }
-
     public void display() {
-        System.out.print(this);
+        System.out.println("===");
+        System.out.println("commit " + this.getCommitID());
+        List<Commit> parents = this.getParent();
+        if (parents.size() > 1) {
+            System.out.println("Merge: " +
+                    parents.get(0).getCommitID().substring(0, 7) +
+                    " " +
+                    parents.get(1).getCommitID().substring(0, 7));
+        }
+        System.out.println("Date: " + dateFormat.format(date));
+        System.out.println(this.getMessage() + "\n");
     }
 
     public String getMessage() {
@@ -144,6 +141,5 @@ public class Commit implements Serializable {
             blobMapping.remove(entry.getKey());
         }
     }
-
 
 }
