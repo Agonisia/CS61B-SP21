@@ -95,6 +95,10 @@ public class Commit implements Serializable {
         }
     }
 
+    public void display() {
+        System.out.print(this);
+    }
+
     public String getMessage() {
         return message;
     }

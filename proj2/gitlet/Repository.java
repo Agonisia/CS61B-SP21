@@ -30,7 +30,6 @@ public class Repository {
     public static final File GITLET_DIR = join(CWD, ".gitlet");
     public static final File HEAD = join(GITLET_DIR, "HEAD");
     public static final File INDEX = join(GITLET_DIR, "index");
-    public static final File CONFIG = join(GITLET_DIR, "config");
 
     /** The object directory. */
     public static final File OBJECT_DIR = join(GITLET_DIR, "objects");
@@ -113,10 +112,10 @@ public class Repository {
     public static void log() {
         Commit commit = Commit.getCommit();
         while (!commit.getParent().isEmpty()) {
-            System.out.print(commit);
+            commit.display();
             commit = commit.getParent().get(0);
         }
-        System.out.print(commit);
+        commit.display();
     }
 
     public static void checkoutBranch(String branchName) {
@@ -193,11 +192,10 @@ public class Repository {
     }
 
     public static void logGlobal() {
-        File[] allCommitFile = COMMIT_DIR.listFiles();
-        if (allCommitFile != null) {
-            for (File commitFile : allCommitFile) {
-                System.out.print(Utils.readObject(commitFile, Commit.class));
-            }
+        List<String> commitID = Utils.plainFilenamesIn(Repository.COMMIT_DIR);
+        for (String ID : commitID) {
+            Commit commit = Commit.getCommitFromID(ID);
+            commit.display();
         }
     }
 
