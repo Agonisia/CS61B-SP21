@@ -29,7 +29,7 @@ public class Commit implements Serializable {
     private String commitID;
     private Date date;
     private ArrayList<Commit> parent;
-    private TreeMap<String, String> blobMapping; // filename and fileSHA1
+    private TreeMap<String, String> blobMapping; // filename and blobSHA1
     DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.CANADA);
 
     
@@ -80,6 +80,16 @@ public class Commit implements Serializable {
         String head = Utils.readContentsAsString(Repository.HEAD);
         String filename = Utils.readContentsAsString(new File(head));
         return Utils.readObject(Utils.join(Repository.COMMIT_DIR, filename), Commit.class);
+    }
+
+    @Override
+    public String toString() {
+        return "Commit{" +
+                "message='" + this.message + '\'' +
+                ", date=" + this.date +
+                ", pathToBlobID=" + this.blobMapping.toString() +
+                ", parents=" + this.parent +
+                '}';
     }
 
     public void display() {

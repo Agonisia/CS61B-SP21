@@ -17,8 +17,16 @@ public class Stage implements Serializable {
         addStage.put(blob.getFilename(), blob.getBlobSHA1());
     }
 
+    public void addStage(String filename, String blobSHA1) {
+        addStage.put(filename, blobSHA1);
+    }
+
     public void removeStage(Blob blob) {
         removeStage.put(blob.getFilename(), blob.getBlobSHA1());
+    }
+
+    public void removeStage(String filename, String blobSHA1) {
+        removeStage.put(filename, blobSHA1);
     }
 
     public void save() {
@@ -32,6 +40,7 @@ public class Stage implements Serializable {
     public void removeStageRemove(String filename) {
         removeStage.remove(filename);
     }
+
     public static Stage getStage() {
         return Utils.readObject(Repository.INDEX, Stage.class);
     }
@@ -40,7 +49,7 @@ public class Stage implements Serializable {
         return addStage;
     }
 
-    public String getAddStageBlob(String filename) {
+    public String getAddStageBlobSHA1(String filename) {
         return addStage.get(filename);
     }
 
@@ -48,14 +57,14 @@ public class Stage implements Serializable {
         return removeStage;
     }
 
-    public String getRemoveStageBlob(String filename) {
+    public String getRemoveStageBlobSHA1(String filename) {
         return removeStage.get(filename);
     }
-
 
     public void clear() {
         addStage.clear();
         removeStage.clear();
+        save();
     }
 
     public boolean isEmpty() {

@@ -56,9 +56,17 @@ public class Main {
 
                 } else if (args.length == 3) {
                     // case checkout -- [file name]
+                    if (!args[1].equals("--")) {
+                        System.out.println("Incorrect operands.");
+                        System.exit(0);
+                    }
                     Repository.checkoutFile(args[2]);
                 } else if (args.length == 4) {
                     // case checkout [commit id] -- [file name]
+                    if (!args[2].equals("--")) {
+                        System.out.println("Incorrect operands.");
+                        System.exit(0);
+                    }
                     Repository.checkoutSpecifiedFile(args[1], args[3]);
                 } else {
                     System.out.println("Incorrect operands.");
@@ -113,6 +121,7 @@ public class Main {
                     System.exit(0);
                 }
                 Repository.merge(args[1]);
+                break;
             // PARSE 2 done
             default:
                 System.out.println("No command with that name exists.");

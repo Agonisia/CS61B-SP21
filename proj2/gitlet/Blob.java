@@ -30,8 +30,7 @@ public class Blob implements Serializable {
         this.blobSHA1 = Utils.sha1(this.content);
     }
 
-    public Blob(byte[] content, String filename) {
-        this.filename = filename;
+    public Blob(byte[] content) {
         this.content = content;
         this.blobSHA1 = Utils.sha1(this.content);
     }
