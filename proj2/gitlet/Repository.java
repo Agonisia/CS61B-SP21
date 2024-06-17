@@ -238,10 +238,6 @@ public class Repository {
         * File exists in the current commit
         * its version differs from the working directory,
         * not staged in addStage.*/
-        /* deleted case 1:
-        * File exists in the current commit
-        * not in the working directory,
-        * not staged in removeStage.*/
         for (String filename : commit.getAllFilename()) {
             File file = getFile(filename);
             String commitBlobSHA1 = commit.getBlobSHA1(filename);
@@ -254,15 +250,15 @@ public class Repository {
                         && (addStageBlobSHA1 == null || !addStageBlobSHA1.equals(blobSHA1))) {
                     System.out.println(filename + " (modified)");
                 }
-            } else if (removeStageBlobSHA1 == null) {
+            } /*else if (removeStageBlobSHA1 == null) {
                 //System.out.println(filename + " (deleted)");
                 // why?
-            }
+            }*/
         }
         /* modified case 2:
          * Stored in addStage
          * but does not match the files in the current directory.*/
-        /* deleted case 2:
+        /* deleted case 1:
          * Stored in addStage
          * but not in current working directory.*/
         for (String filename : stage.getAddStage().keySet()) {
@@ -380,7 +376,8 @@ public class Repository {
                         addMapping.put(filename, Blob.getBlob(otherBlobSHA1));
                     } else {
                         if (!otherBlobSHA1.equals(masterBlobSHA1)) {
-                            addMapping.put(filename, blobMerge(masterBlobSHA1, otherBlobSHA1));
+                            addMapping.put(filename,
+                                    blobMerge(masterBlobSHA1, otherBlobSHA1));
                         }
                     }
                 }
@@ -390,19 +387,22 @@ public class Repository {
                         if (splitBlobSHA1.equals(masterBlobSHA1)) {
                             removeMapping.put(filename, Blob.getBlob(masterBlobSHA1));
                         } else {
-                            addMapping.put(filename, blobMerge(masterBlobSHA1, otherBlobSHA1));
+                            addMapping.put(filename,
+                                    blobMerge(masterBlobSHA1, otherBlobSHA1));
                         }
                     }
                 } else {
                     if (masterBlobSHA1 == null) {
                         if (!splitBlobSHA1.equals(otherBlobSHA1)) {
-                            addMapping.put(filename, blobMerge(masterBlobSHA1, otherBlobSHA1));
+                            addMapping.put(filename,
+                                    blobMerge(masterBlobSHA1, otherBlobSHA1));
                         }
                     } else {
                         if (!splitBlobSHA1.equals(otherBlobSHA1)) {
                             if (!splitBlobSHA1.equals(masterBlobSHA1)) {
                                 if (!otherBlobSHA1.equals(masterBlobSHA1)) {
-                                    addMapping.put(filename, blobMerge(masterBlobSHA1, otherBlobSHA1));
+                                    addMapping.put(filename,
+                                            blobMerge(masterBlobSHA1, otherBlobSHA1));
                                 }
                             } else {
                                 addMapping.put(filename, Blob.getBlob(otherBlobSHA1));
@@ -475,7 +475,8 @@ public class Repository {
         Stage stage = Stage.getStage();
         for (String filename : Utils.plainFilenamesIn(Repository.CWD)) {
             File file = getFile(filename);
-            if ((commit.getBlobSHA1(filename) == null && stage.getAddStageBlobSHA1(filename) == null)
+            if ((commit.getBlobSHA1(filename) == null
+                    && stage.getAddStageBlobSHA1(filename) == null)
                     || (file.exists() && stage.getRemoveStageBlobSHA1(filename) != null)) {
                 untrackedFile.add(filename);
             }
@@ -489,7 +490,8 @@ public class Repository {
         Commit commit = Commit.getCommitFromID(commitID);
         for (String filename : untrackedFile) {
             if (commit.getBlobSHA1(filename) != null) {
-                System.out.println("There is an untracked file in the way; delete it, or add and commit it first.");
+                System.out.println("There is an untracked file in the way; "
+                        + "delete it, or add and commit it first.");
                 System.exit(0);
             }
         }

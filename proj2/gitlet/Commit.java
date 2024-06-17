@@ -30,7 +30,7 @@ public class Commit implements Serializable {
     private Date date;
     private ArrayList<Commit> parent;
     private TreeMap<String, String> blobMapping; // filename and blobSHA1
-    // DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
+    private static final int FULL_COMMIT_ID_LENGTH = 40;
 
     
     /* fill in the rest of this class. */
@@ -68,17 +68,39 @@ public class Commit implements Serializable {
     }
 
     private String getTimestamp() {
-        // Thu Jan 01 08:00:00 1970 +0800
-        DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.ENGLISH);
+        DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.CANADA);
         return dateFormat.format(date);
     }
 
     public static Commit getCommitFromID(String commitID) {
-        File commitFile = Utils.join(Repository.COMMIT_DIR, commitID);
-        if (commitFile.exists()) {
-            return Utils.readObject(commitFile, Commit.class);
-        } else {
+        // case for short id
+        if (commitID.length() < FULL_COMMIT_ID_LENGTH) {
+            File[] allCommits = Repository.COMMIT_DIR.listFiles();
+            if (allCommits != null) {
+                File closestMatch = null;
+                int closestDistance = Integer.MAX_VALUE;
+
+                for (File file : allCommits) {
+                    String filename = file.getName();
+                    int distance = getLevenshteinDistance(commitID, filename);
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestMatch = file;
+                    }
+                }
+
+                if (closestMatch != null) {
+                    return Utils.readObject(closestMatch, Commit.class);
+                }
+            }
             return null;
+        } else {
+            File commitFile = Utils.join(Repository.COMMIT_DIR, commitID);
+            if (commitFile.exists()) {
+                return Utils.readObject(commitFile, Commit.class);
+            } else {
+                return null;
+            }
         }
     }
 
@@ -88,25 +110,15 @@ public class Commit implements Serializable {
         return Utils.readObject(Utils.join(Repository.COMMIT_DIR, filename), Commit.class);
     }
 
-    @Override
-    public String toString() {
-        return "Commit{" +
-                "message='" + this.message + '\'' +
-                ", date=" + this.date +
-                ", pathToBlobID=" + this.blobMapping.toString() +
-                ", parents=" + this.parent +
-                '}';
-    }
-
     public void display() {
         System.out.println("===");
         System.out.println("commit " + this.getCommitID());
         List<Commit> parents = this.getParent();
         if (parents.size() > 1) {
-            System.out.println("Merge: " +
-                    parents.get(0).getCommitID().substring(0, 7) +
-                    " " +
-                    parents.get(1).getCommitID().substring(0, 7));
+            System.out.println("Merge: "
+                    + parents.get(0).getCommitID().substring(0, 7)
+                    + " "
+                    + parents.get(1).getCommitID().substring(0, 7));
         }
         System.out.println("Date: " + this.getTimestamp());
         System.out.println(this.getMessage() + "\n");
@@ -156,6 +168,25 @@ public class Commit implements Serializable {
         for (Map.Entry<String, String> entry : somewhereBlobMapping.entrySet()) {
             blobMapping.remove(entry.getKey());
         }
+    }
+
+    private static int getLevenshteinDistance(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1]
+                                    + (s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1),
+                            Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1));
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
     }
 
 }
