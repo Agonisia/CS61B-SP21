@@ -68,8 +68,10 @@ public class Commit implements Serializable {
     }
 
     private String getTimestamp() {
-        // both
-        DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.CANADA);
+        // set locale on Canada would fail auto-grader's test using log command
+        // but local test could pass
+        // using english or us to avoid this annoying situation
+        DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.US);
         return dateFormat.format(date);
     }
 
