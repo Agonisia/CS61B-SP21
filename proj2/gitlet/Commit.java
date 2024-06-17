@@ -30,7 +30,7 @@ public class Commit implements Serializable {
     private Date date;
     private ArrayList<Commit> parent;
     private TreeMap<String, String> blobMapping; // filename and blobSHA1
-    DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.CANADA);
+    // DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.ENGLISH);
 
     
     /* fill in the rest of this class. */
@@ -64,7 +64,13 @@ public class Commit implements Serializable {
     }
 
     private String idGenerate() {
-        return Utils.sha1(dateFormat.format(date), message, parent.toString());
+        return Utils.sha1(this.toString());
+    }
+
+    private String getTimestamp() {
+        // Thu Jan 01 08:00:00 1970 +0800
+        DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.ENGLISH);
+        return dateFormat.format(date);
     }
 
     public static Commit getCommitFromID(String commitID) {
@@ -102,7 +108,7 @@ public class Commit implements Serializable {
                     " " +
                     parents.get(1).getCommitID().substring(0, 7));
         }
-        System.out.println("Date: " + dateFormat.format(date));
+        System.out.println("Date: " + this.getTimestamp());
         System.out.println(this.getMessage() + "\n");
     }
 
