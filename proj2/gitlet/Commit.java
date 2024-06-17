@@ -68,6 +68,7 @@ public class Commit implements Serializable {
     }
 
     private String getTimestamp() {
+        // both
         DateFormat dateFormat = new SimpleDateFormat("E MMM dd HH:mm:ss yyyy Z", Locale.CANADA);
         return dateFormat.format(date);
     }
@@ -108,6 +109,16 @@ public class Commit implements Serializable {
         String head = Utils.readContentsAsString(Repository.HEAD);
         String filename = Utils.readContentsAsString(new File(head));
         return Utils.readObject(Utils.join(Repository.COMMIT_DIR, filename), Commit.class);
+    }
+
+    @Override
+    public String toString() {
+        return "Commit{"
+                + "message='" + this.message + '\''
+                + ", date=" + this.date
+                + ", pathToBlobID=" + this.blobMapping.toString()
+                + ", parents=" + this.parent
+                + '}';
     }
 
     public void display() {
