@@ -101,7 +101,8 @@ public class Engine {
                     StdDraw.text(midWidth, midHeight,
                             "Congratulations on completing CS61B!");
                     StdDraw.text(midWidth, midHeight - 2,
-                            "You passed maze " + mondial.seed + " using " + elapsedTime + " seconds!");
+                            "You passed maze " + mondial.seed
+                                    + " using " + elapsedTime + " seconds!");
                     StdDraw.show();
                 }
 
@@ -200,7 +201,8 @@ public class Engine {
         return Long.parseLong(input.substring(1, indexS));
     }
 
-    private static void controlWithString(Mondial mondial, TETile[][] world, Player player, Exit exit,
+    private static void controlWithString(Mondial mondial, TETile[][] world,
+                                          Player player, Exit exit,
                                           String input) {
 
         boolean gameClear = false;

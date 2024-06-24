@@ -18,7 +18,8 @@ import java.awt.Color;
 
 public class Tileset {
     public static final TETile AVATAR = new TETile('@', Color.white, Color.darkGray, "you");
-    public static final TETile WALL = new TETile('#', new Color(222, 107, 107), new Color(110, 49, 49),
+    public static final TETile WALL = new TETile('#',
+            new Color(222, 107, 107), new Color(110, 49, 49),
             "wall");
     public static final TETile FLOOR = new TETile('·', new Color(3, 33, 3), Color.darkGray,
             "floor");
@@ -36,9 +37,12 @@ public class Tileset {
     public static final TETile TREE = new TETile('♠', Color.green, Color.black, "tree");
 
     // for sight range
-    public static final TETile GRADIENT1 = new TETile('·', Color.DARK_GRAY, Color.BLACK, "gradient1");
-    public static final TETile GRADIENT2 = new TETile('·', Color.GRAY, Color.BLACK, "gradient2");
-    public static final TETile GRADIENT3 = new TETile('·', Color.LIGHT_GRAY, Color.BLACK, "gradient3");
+    public static final TETile GRADIENT1 = new TETile('·',
+            Color.DARK_GRAY, Color.BLACK, "gradient1");
+    public static final TETile GRADIENT2 = new TETile('·',
+            Color.GRAY, Color.BLACK, "gradient2");
+    public static final TETile GRADIENT3 = new TETile('·',
+            Color.LIGHT_GRAY, Color.BLACK, "gradient3");
 
 }
 

@@ -6,6 +6,9 @@ import java.io.*;
 
 public class Archive implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 114514;
+
     private Mondial mondial;
     private TETile[][] world;
     private Player player;
