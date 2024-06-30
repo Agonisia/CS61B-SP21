@@ -153,11 +153,11 @@ public class Engine {
 
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
         char firstOperation = input.charAt(0); // 'n' for new or 'l' for load or 's' for save.
-        if (firstOperation == 'n') {
+        if (firstOperation == 'n' || firstOperation == 'N') {
             finalWorldFrame = newGameFromString(input);
-        } else if (firstOperation == 'l') {
+        } else if (firstOperation == 'l' || firstOperation == 'L') {
             finalWorldFrame = loadGameFromString(input);
-        } else if (firstOperation == 'q') {
+        } else if (firstOperation == 'q' || firstOperation == 'Q') {
             System.exit(0);
         } else {
             finalWorldFrame = newGameFromString(input);
@@ -197,8 +197,19 @@ public class Engine {
     }
 
     private static long getSeedFromString(String input) {
-        int indexS = input.indexOf('s');
-        return Long.parseLong(input.substring(1, indexS));
+        // regular expression
+        String pattern = "[sSwWaAdD]";
+
+        // Find the first match
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(pattern);
+        java.util.regex.Matcher m = p.matcher(input);
+
+        if (m.find()) {
+            int index = m.start();
+            return Long.parseLong(input.substring(1, index));
+        } else {
+            throw new IllegalArgumentException("Please enter directions: wasd");
+        }
     }
 
     private static void controlWithString(Mondial mondial, TETile[][] world,
@@ -211,7 +222,7 @@ public class Engine {
         while (!gameClear && i < input.length()) {
             char command = input.charAt(i);
 
-            world = player.move(world, Character.toString(command));
+            world = player.stringMove(world, Character.toString(command));
 
             if (player.pos.x == exit.pos.x && player.pos.y == exit.pos.y) {
                 gameClear = true;

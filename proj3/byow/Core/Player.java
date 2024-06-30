@@ -76,6 +76,21 @@ public class Player implements Serializable {
         return WorldBuilder.generateView(world, this, sightRange);
     }
 
+    public TETile[][] stringMove(TETile[][] world, String moveInput) {
+        for (char c : moveInput.toCharArray()) {
+            switch (Character.toLowerCase(c)) {
+                case 'w' -> tryMove(world, 0, 1);
+                case 's' -> tryMove(world, 0, -1);
+                case 'a' -> tryMove(world, -1, 0);
+                case 'd' -> tryMove(world, 1, 0);
+                default -> {
+                    // Do nothing for invalid input
+                }
+            }
+        }
+        return world;
+    }
+
     private void tryMove(TETile[][] world, int dx, int dy) {
         int newX = pos.x + dx;
         int newY = pos.y + dy;
