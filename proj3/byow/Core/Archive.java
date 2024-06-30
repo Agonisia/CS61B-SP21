@@ -22,7 +22,7 @@ public class Archive implements Serializable {
     }
 
     public void save() {
-        File file = new File("./save");
+        File file = new File("./save.txt");
 
         try {
             if (!file.exists()) {
@@ -41,7 +41,7 @@ public class Archive implements Serializable {
     }
 
     public static Archive load() {
-        File file = new File("./save");
+        File file = new File("./save.txt");
 
         if (!file.exists()) {
             throw new RuntimeException("Save file not found");

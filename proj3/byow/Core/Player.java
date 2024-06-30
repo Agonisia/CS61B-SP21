@@ -80,7 +80,7 @@ public class Player implements Serializable {
         int newX = pos.x + dx;
         int newY = pos.y + dy;
         if (isInBounds(world, newX, newY)
-                && (world[newX][newY].equals(Tileset.FLOOR) || world[newX][newY].equals(Tileset.LOCKED_DOOR))) {
+                && (world[newX][newY].equals(Tileset.FLOOR) || world[newX][newY].equals(Tileset.EXIT))) {
             world[pos.x][pos.y] = Tileset.FLOOR;
             world[newX][newY] = Tileset.AVATAR;
             pos = new Position(newX, newY);
