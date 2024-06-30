@@ -43,7 +43,6 @@ public class Tileset {
             Color.GRAY, Color.BLACK, "gradient2");
     public static final TETile GRADIENT3 = new TETile('·',
             Color.LIGHT_GRAY, Color.BLACK, "gradient3");
-
 }
 
 
